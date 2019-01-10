@@ -58,7 +58,7 @@
         var time = null;
         var state = true;
         var bg = document.getElementById('bg');
-        var lever = 800;
+        var level = 800;
         var points = 0;
         //获取元素内存CSS样式
         //生成从minNum到maxNum的随机数
@@ -89,7 +89,7 @@
 
         //开始游戏
         function startGame() {
-            time = window.setInterval(mainThread, lever);
+            time = window.setInterval(mainThread, level);
         }
 
         //游戏主线程
@@ -133,7 +133,7 @@
                     points = points + 1;
                     if (points = 10) {
                         points = 0;
-                        lever = lever - 10;
+                        level = level - 10;
                     }
                 } else {
                     over();
