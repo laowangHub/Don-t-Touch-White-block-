@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="rest.css">
+</head>
+<!--开发问题-->
+<style>
+    h1 {
+        font: 72px/56px 新宋体;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    #bg {
+        box-sizing: content-box;
+        width: 400px;
+        height: 400px;
+        border: 2px solid black;
+        margin: 100px auto;
+        overflow: hidden;
+
+    }
+
+    #bg ul {
+        height: 100px;
+    }
+
+    #bg li {
+        box-sizing: border-box;
+        float: left;
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        border-bottom: 2px solid black;
+        border-top: 2px solid black;
+    }
+
+    #bg .black {
+        background-color: black;
+    }
+</style>
+
+<body>
+    <h1>Don't Touch White Block</h1>
+
+    <div id="bg">
+        <ul>
+          
+        </ul>
+    </div>
+    <audio src="bg.wav" id="bgaudio" hidden="true" autoplay="true" loop="true"></audio>
+    <script>
+        var time = null;
+        var state = true;
+        var bg = document.getElementById('bg');
+        var lever = 800;
+        var points = 0;
+        //获取元素内存CSS样式
+        function getObjstyle(el, elementstyle) {
+            return el.currentStyle ? el.currentStyle[elementstyle] : window.getComputedStyle(el, null)[elementstyle];
+        }
+        //生成从minNum到maxNum的随机数
+        function randomNum(minNum, maxNum) {
+            switch (arguments.length) {
+                case 1:
+                    return parseInt(Math.random() * minNum + 1, 10);
+                    break;
+                case 2:
+                    return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        }
+        //添加黑白块
+        function addWhiteBlackBlokc() {
+            var ul = document.createElement("ul");
+            for (var i = 0; i < 4; i++) {
+                var li = document.createElement("li");
+                ul.appendChild(li);
+            }
+            var blackli = ul.getElementsByTagName("li")[randomNum(0, 3)];
+            blackli.className = "black";
+            bg.insertBefore(ul, bg.firstChild);
+        }
+
+        //开始游戏
+        function startGame() {
+            time = window.setInterval(mainThread, lever);
+        }
+
+        //游戏主线程
+        function mainThread() {
+            if (state) {
+                //加白块
+                addWhiteBlackBlokc();
+                //判断是否结束
+                isOver();
+            } else {
+                alert("黑块溜走了!");
+                over();
+            }
+        }
+        //判断最底下是否有黑块
+        function isOver() {
+            var ul = bg.getElementsByTagName("ul");
+            if (ul.length == 5) {
+                var li = ul[3].getElementsByClassName("black");
+                if (li.length > 0) {
+                    state = false;
+                    return;
+                }
+                bg.removeChild(ul[4]);
+            }
+        }
+
+        //结束游戏
+        function over() {
+            state = false
+            clearInterval(time);
+        }
+
+
+        //鼠标点击事件
+        bg.onclick = function (ev) {   
+            if (state) {
+                ev = ev.target;
+                if (ev.className == "black") {
+                    ev.className = "";
+                    points = points + 1;
+                    if (points = 10) {
+                        points = 0;
+                        lever = lever - 10;
+                    }
+                } else {
+                    over();
+                    alert("点击到白块咯！");
+                }
+            } else {
+                alert("本局已结束！");
+            }
+
+        };
+
+
+
+
+        //游戏启动
+        startGame();
+
+    </script>
+</body>
+
+</html>
